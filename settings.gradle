@@ -1,0 +1,19 @@
+plugins {
+    id "com.gradle.enterprise" version "3.6.3"
+}
+
+rootProject.name = 'lab-flink-latency'
+
+// CI=true, TRAVIS=true, CONTINUOUS_INTEGRATION=true set automatically during Travis execution
+// see https://docs.travis-ci.com/user/environment-variables#default-environment-variables
+def isCIBuild = ['CI', 'TRAVIS', 'CONTINUOUS_INTEGRATION'].every { System.getenv(it) == 'true' }
+if (isCIBuild) {
+    gradleEnterprise {
+        buildScan {
+            // Build Scan enabled and TOS accepted for Travis build. This does not apply to builds on
+            // non-Travis machines. Developers need to separately enable and accept TOS to use build scans.
+            termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+            termsOfServiceAgree = 'yes'
+        }
+    }
+}
