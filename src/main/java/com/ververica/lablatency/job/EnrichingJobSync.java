@@ -44,12 +44,12 @@ import static org.apache.flink.api.java.typeutils.TypeExtractor.getForClass;
 
 /** EnrichingJob: enrich measurements with location synchronously. */
 public class EnrichingJobSync {
+    private static final Logger LOG = LoggerFactory.getLogger(EnrichingJobSync.class);
 
     public static void main(String[] args) throws Exception {
-        Logger logger = LoggerFactory.getLogger(WindowingJob.class);
 
         ParameterTool params = ParameterTool.fromArgs(args);
-        logger.info("params: " + params.getProperties());
+        LOG.info("params: " + params.getProperties());
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
@@ -134,7 +134,7 @@ public class EnrichingJobSync {
             extends RichFlatMapFunction<MeasurementRecord, Tuple2<Measurement, Long>> {
 
         private static final long serialVersionUID = 1L;
-        private static Logger logger = LoggerFactory.getLogger(MeasurementDeserializer.class);
+        private static final Logger LOG = LoggerFactory.getLogger(MeasurementDeserializer.class);
 
         private ObjectMapper objectMapper;
 
@@ -153,7 +153,7 @@ public class EnrichingJobSync {
                 measurement =
                         this.objectMapper.readValue(kafkaRecord.getValue(), Measurement.class);
             } catch (IOException e) {
-                logger.error("Failed to deserialize: " + e.getLocalizedMessage());
+                LOG.error("Failed to deserialize: " + e.getLocalizedMessage());
                 return;
             }
             out.collect(new Tuple2<>(measurement, kafkaRecord.getTimestamp()));

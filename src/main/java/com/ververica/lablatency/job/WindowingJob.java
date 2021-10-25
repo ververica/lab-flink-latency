@@ -39,13 +39,12 @@ import static org.apache.flink.api.java.typeutils.TypeExtractor.getForClass;
 
 /** WindowingJob */
 public class WindowingJob {
+    private static final Logger LOG = LoggerFactory.getLogger(WindowingJob.class);
 
     public static void main(String[] args) throws Exception {
 
-        Logger logger = LoggerFactory.getLogger(WindowingJob.class);
-
         ParameterTool params = ParameterTool.fromArgs(args);
-        logger.info("params: " + params.getProperties());
+        LOG.info("params: " + params.getProperties());
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
@@ -134,7 +133,7 @@ public class WindowingJob {
             extends RichFlatMapFunction<MeasurementRecord, Measurement> {
 
         private static final long serialVersionUID = 1L;
-        private static Logger logger = LoggerFactory.getLogger(MeasurementDeserializer.class);
+        private static final Logger LOG = LoggerFactory.getLogger(MeasurementDeserializer.class);
 
         private ObjectMapper objectMapper;
 
@@ -151,7 +150,7 @@ public class WindowingJob {
                 measurement =
                         this.objectMapper.readValue(kafkaRecord.getValue(), Measurement.class);
             } catch (IOException e) {
-                logger.error("Failed to deserialize: " + e.getLocalizedMessage());
+                LOG.error("Failed to deserialize: " + e.getLocalizedMessage());
                 return;
             }
             out.collect(measurement);

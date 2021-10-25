@@ -37,13 +37,12 @@ import static org.apache.flink.api.java.typeutils.TypeExtractor.getForClass;
 
 /** WindowingJob without incremental aggregation. */
 public class WindowingJobNoAggregation {
+    private static final Logger LOG = LoggerFactory.getLogger(WindowingJobNoAggregation.class);
 
     public static void main(String[] args) throws Exception {
 
-        Logger logger = LoggerFactory.getLogger(WindowingJobNoAggregation.class);
-
         ParameterTool params = ParameterTool.fromArgs(args);
-        logger.info("params: " + params.getProperties());
+        LOG.info("params: " + params.getProperties());
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
@@ -131,7 +130,7 @@ public class WindowingJobNoAggregation {
             extends RichFlatMapFunction<MeasurementRecord, Measurement> {
 
         private static final long serialVersionUID = 1L;
-        private static Logger logger = LoggerFactory.getLogger(MeasurementDeserializer.class);
+        private static final Logger LOG = LoggerFactory.getLogger(MeasurementDeserializer.class);
 
         private ObjectMapper objectMapper;
 
@@ -148,7 +147,7 @@ public class WindowingJobNoAggregation {
                 measurement =
                         this.objectMapper.readValue(kafkaRecord.getValue(), Measurement.class);
             } catch (IOException e) {
-                logger.error("Failed to deserialize: " + e.getLocalizedMessage());
+                LOG.error("Failed to deserialize: " + e.getLocalizedMessage());
                 return;
             }
             out.collect(measurement);

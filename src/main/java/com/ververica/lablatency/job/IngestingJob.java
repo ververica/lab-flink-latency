@@ -23,9 +23,9 @@ public class IngestingJob {
 
     static class KafkaSerSchema implements KafkaSerializationSchema<Measurement> {
 
-        private Logger logger = LoggerFactory.getLogger(KafkaSerSchema.class);
+        private static final Logger LOG = LoggerFactory.getLogger(KafkaSerSchema.class);
         private ObjectMapper mapper;
-        private String topic;
+        private final String topic;
 
         public KafkaSerSchema(String topic) {
             this.topic = topic;
@@ -47,15 +47,13 @@ public class IngestingJob {
                         null,
                         this.mapper.writeValueAsBytes(measurement));
             } catch (JsonProcessingException e) {
-                logger.error("Failed to serialize measurement: " + e.getMessage());
+                LOG.error("Failed to serialize measurement: " + e.getMessage());
                 return null;
             }
         }
     }
 
     public static void main(String[] args) throws Exception {
-
-        Logger logger = LoggerFactory.getLogger(IngestingJob.class);
 
         final ParameterTool params = ParameterTool.fromArgs(args);
 
