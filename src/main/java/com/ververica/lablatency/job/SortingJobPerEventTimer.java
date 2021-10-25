@@ -220,7 +220,7 @@ public class SortingJobPerEventTimer {
             super.open(parameters);
 
             ListStateDescriptor<Tuple2<Measurement, Long>> desc =
-                    new ListStateDescriptor<Tuple2<Measurement, Long>>(
+                    new ListStateDescriptor<>(
                             "events",
                             TypeInformation.of(new TypeHint<Tuple2<Measurement, Long>>() {}));
             listState = getRuntimeContext().getListState(desc);

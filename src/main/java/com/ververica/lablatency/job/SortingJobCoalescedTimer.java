@@ -234,7 +234,7 @@ public class SortingJobCoalescedTimer {
 
         private static final Logger LOG = LoggerFactory.getLogger(SortFunction.class);
         private ListState<Tuple2<Measurement, Long>> listState;
-        private int roundTo;
+        private final int roundTo;
 
         public SortFunction(int roundTo) {
             this.roundTo = roundTo;
@@ -245,9 +245,10 @@ public class SortingJobCoalescedTimer {
             super.open(parameters);
 
             ListStateDescriptor<Tuple2<Measurement, Long>> desc =
-                    new ListStateDescriptor<Tuple2<Measurement, Long>>(
+                    new ListStateDescriptor<>(
                             "events",
-                            TypeInformation.of(new TypeHint<Tuple2<Measurement, Long>>() {}));
+                            TypeInformation.of(new TypeHint<Tuple2<Measurement, Long>>() {
+                            }));
             listState = getRuntimeContext().getListState(desc);
         }
 

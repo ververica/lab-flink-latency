@@ -76,7 +76,7 @@ public class IngestingJob {
         kafkaProducerProps.setProperty("transaction.timeout.ms", "600000");
 
         FlinkKafkaProducer<Measurement> producer =
-                new FlinkKafkaProducer<Measurement>(
+                new FlinkKafkaProducer<>(
                         topic,
                         new KafkaSerSchema(topic),
                         kafkaProducerProps,

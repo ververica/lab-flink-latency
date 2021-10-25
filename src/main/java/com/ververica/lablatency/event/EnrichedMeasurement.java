@@ -2,6 +2,7 @@ package com.ververica.lablatency.event;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class EnrichedMeasurement extends Measurement {
 
     private String locationInfo;
