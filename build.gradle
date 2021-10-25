@@ -71,13 +71,8 @@ dependencies {
     shadow "org.apache.flink:flink-streaming-scala_${scalaBinaryVersion}:${flinkVersion}"
 
     implementation "org.apache.flink:flink-connector-kafka_${scalaBinaryVersion}:${flinkVersion}"
-    implementation "org.apache.flink:flink-statebackend-rocksdb_${scalaBinaryVersion}:${flinkVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
-
-    testImplementation "junit:junit:${junitVersion}"
-    testImplementation "org.apache.flink:flink-test-utils-junit:${flinkVersion}"
-    testImplementation 'org.hamcrest:hamcrest-library:1.3'
 }
 
 sourceSets {

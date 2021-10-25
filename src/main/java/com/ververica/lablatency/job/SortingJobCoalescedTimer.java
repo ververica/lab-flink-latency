@@ -247,8 +247,7 @@ public class SortingJobCoalescedTimer {
             ListStateDescriptor<Tuple2<Measurement, Long>> desc =
                     new ListStateDescriptor<>(
                             "events",
-                            TypeInformation.of(new TypeHint<Tuple2<Measurement, Long>>() {
-                            }));
+                            TypeInformation.of(new TypeHint<Tuple2<Measurement, Long>>() {}));
             listState = getRuntimeContext().getListState(desc);
         }
 
