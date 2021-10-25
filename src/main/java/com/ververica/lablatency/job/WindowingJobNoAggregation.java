@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ververica.lablatency.event.Measurement;
 import com.ververica.lablatency.event.MeasurementRecord;
 import com.ververica.lablatency.event.WindowedMeasurement;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +50,6 @@ public class WindowingJobNoAggregation {
         final String kafkaAddress = params.get("kafka", "localhost:9092");
         final String topic = params.get("topic", "lablatency");
         final String group = params.get("group", "lablatency");
-        final String startOffset = params.get("offset", "latest");
 
         final int slideSize = params.getInt("slide-size", 10);
         final int outOfOrderness = params.getInt("out-of-orderness", 250);
@@ -59,7 +57,6 @@ public class WindowingJobNoAggregation {
         Properties kafkaConsumerProps = new Properties();
         kafkaConsumerProps.setProperty("bootstrap.servers", kafkaAddress);
         kafkaConsumerProps.setProperty("group.id", group);
-        kafkaConsumerProps.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, startOffset);
         FlinkKafkaConsumer<MeasurementRecord> consumer =
                 new FlinkKafkaConsumer<>(topic, new KafkaDeSerSchema(), kafkaConsumerProps);
         // start from the latest message

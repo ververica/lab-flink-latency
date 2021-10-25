@@ -25,7 +25,6 @@ import com.ververica.lablatency.event.Measurement;
 import com.ververica.lablatency.event.MeasurementRecord;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +60,6 @@ public class EnrichingJobAsync {
         final String kafkaAddress = params.get("kafka", "localhost:9092");
         final String topic = params.get("topic", "lablatency");
         final String group = params.get("group", "lablatency");
-        final String startOffset = params.get("offset", "latest");
 
         final int outOfOrderness = params.getInt("out-of-orderness", 250);
         final int responseTimeMin = params.getInt("response-time-min", 1);
@@ -71,7 +69,6 @@ public class EnrichingJobAsync {
         Properties kafkaConsumerProps = new Properties();
         kafkaConsumerProps.setProperty("bootstrap.servers", kafkaAddress);
         kafkaConsumerProps.setProperty("group.id", group);
-        kafkaConsumerProps.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, startOffset);
         FlinkKafkaConsumer<MeasurementRecord> consumer =
                 new FlinkKafkaConsumer<>(topic, new KafkaDeSerSchema(), kafkaConsumerProps);
         // start from the latest message
