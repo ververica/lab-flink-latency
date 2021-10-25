@@ -93,7 +93,7 @@ public class IngestingJob {
                         topic,
                         new KafkaSerSchema(topic),
                         kafkaProducerProps,
-                        FlinkKafkaProducer.Semantic.EXACTLY_ONCE);
+                        FlinkKafkaProducer.Semantic.AT_LEAST_ONCE);
 
         env.addSource(new MeasurementSource(spikeInterval, waitMicro)).addSink(producer);
 
