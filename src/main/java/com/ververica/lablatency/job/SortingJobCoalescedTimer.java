@@ -47,12 +47,12 @@ import static org.apache.flink.api.java.typeutils.TypeExtractor.getForClass;
 
 /** SortingJob with coalesced timers. */
 public class SortingJobCoalescedTimer {
+    private static final Logger LOG = LoggerFactory.getLogger(SortingJobCoalescedTimer.class);
 
     public static void main(String[] args) throws Exception {
-        Logger logger = LoggerFactory.getLogger(WindowingJob.class);
 
         ParameterTool params = ParameterTool.fromArgs(args);
-        logger.info("params: " + params.getProperties());
+        LOG.info("params: " + params.getProperties());
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
@@ -163,7 +163,7 @@ public class SortingJobCoalescedTimer {
             extends RichFlatMapFunction<MeasurementRecord, Tuple2<Measurement, Long>> {
 
         private static final long serialVersionUID = 1L;
-        private static Logger logger =
+        private static final Logger LOG =
                 LoggerFactory.getLogger(MeasurementDeserializerOneMapperPerEvent.class);
 
         @Override
@@ -180,7 +180,7 @@ public class SortingJobCoalescedTimer {
                 measurement =
                         new ObjectMapper().readValue(kafkaRecord.getValue(), Measurement.class);
             } catch (IOException e) {
-                logger.error("Failed to deserialize: " + e.getLocalizedMessage());
+                LOG.error("Failed to deserialize: " + e.getLocalizedMessage());
                 return;
             }
             out.collect(Tuple2.of(measurement, kafkaRecord.getTimestamp()));
@@ -195,7 +195,7 @@ public class SortingJobCoalescedTimer {
             extends RichFlatMapFunction<MeasurementRecord, Tuple2<Measurement, Long>> {
 
         private static final long serialVersionUID = 1L;
-        private static Logger logger =
+        private static final Logger LOG =
                 LoggerFactory.getLogger(MeasurementDeserializerOneGlobalMapper.class);
 
         private ObjectMapper objectMapper;
@@ -215,7 +215,7 @@ public class SortingJobCoalescedTimer {
                 measurement =
                         this.objectMapper.readValue(kafkaRecord.getValue(), Measurement.class);
             } catch (IOException e) {
-                logger.error("Failed to deserialize: " + e.getLocalizedMessage());
+                LOG.error("Failed to deserialize: " + e.getLocalizedMessage());
                 return;
             }
             out.collect(Tuple2.of(measurement, kafkaRecord.getTimestamp()));
@@ -235,7 +235,7 @@ public class SortingJobCoalescedTimer {
             extends KeyedProcessFunction<
                     Integer, Tuple2<Measurement, Long>, Tuple2<Measurement, Long>> {
 
-        private static final Logger logger = LoggerFactory.getLogger(SortFunction.class);
+        private static final Logger LOG = LoggerFactory.getLogger(SortFunction.class);
         private ListState<Tuple2<Measurement, Long>> listState;
         private int roundTo;
 
@@ -285,7 +285,7 @@ public class SortingJobCoalescedTimer {
 
             ArrayList<Tuple2<Measurement, Long>> list = new ArrayList<>();
             listState.get().forEach(list::add);
-            logger.info("Sorting list with size: " + list.size());
+            LOG.info("Sorting list with size: " + list.size());
             list.sort(new MeasurementByTimeComparator());
 
             int index = 0;

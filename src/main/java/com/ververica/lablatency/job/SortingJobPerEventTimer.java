@@ -45,12 +45,12 @@ import static org.apache.flink.api.java.typeutils.TypeExtractor.getForClass;
 
 /** SortingJob with per event timers. */
 public class SortingJobPerEventTimer {
+    private static final Logger LOG = LoggerFactory.getLogger(SortingJobPerEventTimer.class);
 
     public static void main(String[] args) throws Exception {
-        Logger logger = LoggerFactory.getLogger(WindowingJob.class);
 
         ParameterTool params = ParameterTool.fromArgs(args);
-        logger.info("params: " + params.getProperties());
+        LOG.info("params: " + params.getProperties());
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
@@ -149,7 +149,7 @@ public class SortingJobPerEventTimer {
             extends RichFlatMapFunction<MeasurementRecord, Tuple2<Measurement, Long>> {
 
         private static final long serialVersionUID = 1L;
-        private static Logger logger =
+        private static final Logger LOG =
                 LoggerFactory.getLogger(MeasurementDeserializerOneMapperPerEvent.class);
 
         @Override
@@ -166,7 +166,7 @@ public class SortingJobPerEventTimer {
                 measurement =
                         new ObjectMapper().readValue(kafkaRecord.getValue(), Measurement.class);
             } catch (IOException e) {
-                logger.error("Failed to deserialize: " + e.getLocalizedMessage());
+                LOG.error("Failed to deserialize: " + e.getLocalizedMessage());
                 return;
             }
             out.collect(Tuple2.of(measurement, kafkaRecord.getTimestamp()));
@@ -181,7 +181,7 @@ public class SortingJobPerEventTimer {
             extends RichFlatMapFunction<MeasurementRecord, Tuple2<Measurement, Long>> {
 
         private static final long serialVersionUID = 1L;
-        private static Logger logger =
+        private static final Logger LOG =
                 LoggerFactory.getLogger(MeasurementDeserializerOneGlobalMapper.class);
 
         private ObjectMapper objectMapper;
@@ -201,7 +201,7 @@ public class SortingJobPerEventTimer {
                 measurement =
                         this.objectMapper.readValue(kafkaRecord.getValue(), Measurement.class);
             } catch (IOException e) {
-                logger.error("Failed to deserialize: " + e.getLocalizedMessage());
+                LOG.error("Failed to deserialize: " + e.getLocalizedMessage());
                 return;
             }
             out.collect(Tuple2.of(measurement, kafkaRecord.getTimestamp()));
@@ -213,7 +213,6 @@ public class SortingJobPerEventTimer {
             extends KeyedProcessFunction<
                     Integer, Tuple2<Measurement, Long>, Tuple2<Measurement, Long>> {
 
-        private static final Logger logger = LoggerFactory.getLogger(SortFunction.class);
         private ListState<Tuple2<Measurement, Long>> listState;
 
         private transient DescriptiveStatisticsHistogram eventTimeLag;
