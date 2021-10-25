@@ -9,7 +9,6 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.metrics.Counter;
 import org.apache.flink.runtime.metrics.DescriptiveStatisticsHistogram;
-import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.AsyncDataStream;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -57,12 +56,6 @@ public class EnrichingJobAsync {
         logger.info("params: " + params.getProperties());
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-
-        // Checkpointing Configuration
-        env.enableCheckpointing(60000);
-        env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
-        env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
-        env.getCheckpointConfig().setTolerableCheckpointFailureNumber(3);
 
         final String jobName = params.get("job-name", EnrichingJobAsync.class.getSimpleName());
         final String kafkaAddress = params.get("kafka", "localhost:9092");
