@@ -55,7 +55,7 @@ This job enriches measurements with the location information retrieved from a si
 random latency in the range of 1-6 ms. When location information is retrieved, the job caches it for 1 second to serve further
 retrieving requests.
 
-## EnrichingJobASync
+## EnrichingJobAsync
 
 Similar to `EnrichingJobSync`, except that this job uses
 [Flink's Async I/O](https://nightlies.apache.org/flink/flink-docs-release-1.14/docs/dev/datastream/operators/asyncio/)
